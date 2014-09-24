@@ -8,37 +8,35 @@ namespace ConsoleApplication3
 {
     class Program
     {
-
-       
-
         static void Main(string[] args)
         {
+            int numberOfSalaries;
 
-
-
-
-
-            int NumberOfSalaries;
-            NumberOfSalaries = ReadInt("Ange antalet löner: ");
-
-            if (NumberOfSalaries < 1)
+            do
             {
+                numberOfSalaries = ReadInt("Ange antalet löner: ");
 
-                ProcessSalaries(NumberOfSalaries);
-
-            }
-            else
-
-
-
+                if (numberOfSalaries > 1)
+                {
+                    ProcessSalaries(numberOfSalaries);
+                }
+                else
+                {
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.WriteLine("\n Vänligen ange minst två löner");
+                    Console.ResetColor();
+                }
+                Console.BackgroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("\n Tryck tangent för ny beräkning - Esc avslutar");
+                Console.ResetColor();
+            } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
+           
         }
 
         static int ReadInt(string prompt)
         {
-            
-            int value = 0;
+            //Hämtar info från användaren 
             string readTemp = null;
-
             
             do
             {
@@ -46,63 +44,54 @@ namespace ConsoleApplication3
                 try
                 {
                     readTemp = Console.ReadLine();
-                    value = int.Parse(readTemp);
+                    return int.Parse(readTemp);
                 }
                 catch (FormatException)
                 {
+                    Console.BackgroundColor = ConsoleColor.Red;
                     Console.WriteLine("Fel '{0}' är inte ett heltal", readTemp);
+                    Console.ResetColor();
                 }
                 catch (OverflowException)
                 {
-                    Console.WriteLine("Fel '{0}' är ett för högt värde. Maxvärde är 2,147,483,647", readTemp);
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Fel '{0}' är ett för högt värde. Maxvärde är {1}", readTemp, int.MaxValue);
+                    Console.ResetColor();
                 }
-            } while (value < 1);
-
-            
-            return value;
+            } while (true);
         }
 
         static void ProcessSalaries(int count) {
 
-            int[] theSalaries = new int[count];
+             int[] theSalaries = new int[count];
              int[] theSalariesCop = new int[count];
 
             for (int i = 0; i < count; i++)
             {
-
-                theSalaries[i] = ReadInt("Ange lön nummer  {0}:");
-
+                theSalaries[i] = ReadInt(String.Format("Ange lön nummer  {0} :", i + 1) ); 
             }
-
 
             Console.WriteLine("\n-----------------------------");
             Array.Copy(theSalaries, theSalariesCop, count);
             Array.Sort(theSalaries);
 
-
-
             if (count % 2 == 0)
             {
-
-
                 int medianPart1 = theSalaries[theSalaries.Length / 2];
                 int medianPart2 = theSalaries[theSalaries.Length / 2 - 1];
                 int medianEven = (medianPart1 + medianPart2) / 2;
-
-
-                Console.WriteLine("Medianlönen: {0:c}", medianEven);
+                Console.WriteLine("Medianlönen: {0:c0}", medianEven);
             }
-
             else
             {
                 int medianOdd = theSalaries[theSalaries.Length / 2];
-                Console.WriteLine("Medianlönen: {0:c}", medianOdd);
+                Console.WriteLine("Medianlönen: {0:c0}", medianOdd);
             }
 
-            Console.WriteLine("Medelvärdet: {0:c}", theSalaries.Average());
+            Console.WriteLine("Medelvärdet: {0:c0}", theSalaries.Average());
 
             int salarieSpread = theSalaries.Max() - theSalaries.Min();
-            Console.WriteLine("Lönespridningen är:  {0:c}", salarieSpread);
+            Console.WriteLine("Lönespridningen är:  {0:c0}", salarieSpread);
 
             Console.WriteLine("-----------------------------");
 
